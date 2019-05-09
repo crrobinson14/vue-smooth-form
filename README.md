@@ -1,4 +1,4 @@
-# vue-async-form
+# vue-smooth-form
 
 Asynchronous form handling library for VueJS.
 
@@ -18,7 +18,7 @@ pull requests that have not been addressed and it is still in its 0.0.13 version
 
 ```html
 <template>
-  <vue-async-form v-slot="{form}" :initial-values="initialValues" :validate-form="validate">
+  <vue-smooth-form v-slot="{form}" :initial-values="initialValues" :validate-form="validate">
     <!-- Vuetify controls pass raw strings in their event handlers. Use this syntax for passing along their values. -->
     <v-text-field
       type="email"
@@ -44,15 +44,15 @@ pull requests that have not been addressed and it is still in its 0.0.13 version
     <v-btn color="primarylight" :disabled="form.isSubmitting || !form.isValid" @click.prevent="form.resetForm">Reset</v-btn>
 
     <v-btn flat :disabled="form.submitting">Forgot Password</v-btn>
-  </vue-async-form>
+  </vue-smooth-form>
 </template>
 
 <script>
-    import VueAsyncForm from 'vue-async-form';
+    import VueSmoothForm from 'vue-smooth-form';
     import API from './api';
     
     export default {
-        components: { VueAsyncForm },
+        components: { VueSmoothForm },
         data () {
             return {
                 initialValues: {
@@ -62,11 +62,13 @@ pull requests that have not been addressed and it is still in its 0.0.13 version
             }
         },
         methods: {
+            // Form action handlers can be whatever we want. 
             async login(form) {
                 form.setSubmitting(true);
 
                 try {
                     const result = await API.login(form.values);
+                    console.log('login result', result);
                     form.resetForm();
                 } catch (e) {
                     alert(e.message);
@@ -75,6 +77,8 @@ pull requests that have not been addressed and it is still in its 0.0.13 version
                 form.setSubmitting(false);
             },
         
+            // The validation routine receivs a reference to the form. We destructure here and pull out the only properties we need.
+            // values contains the field values, and setFormErrors is a utility method to set all the error states on the form.
             async validate({ values, setFormErrors }) {
               if (this.validationAbort) {
                 this.validationAbort.abort();
@@ -102,7 +106,7 @@ pull requests that have not been addressed and it is still in its 0.0.13 version
 
 ## Details
 
-This library provides a simple wrapper component called `vue-async-form`. It initializes a local `values` object from a set of initial
+This library provides a simple wrapper component called `vue-smooth-form`. It initializes a local `values` object from a set of initial
 values provided by the parent component, then passes a reference to itself (with useful methods, properties, and events) to its children
 via a slot binding. Simply wire each input field to the values, errors, and event handlers via that reference.
 
@@ -145,10 +149,10 @@ Note that all three event handlers may be called with one of two patterns:
 
 ### Validation and Submission
 
-Unlike other form handling libraries, `vue-async-form` does not try to handle submit events for you. Just create whatever buttons, links,
+Unlike other form handling libraries, `vue-smooth-form` does not try to handle submit events for you. Just create whatever buttons, links,
 or other controls you want to handle this. Typically you would use the `form.setSubmitting()` method as shown above, but only as a
 convenience if you want to disable certain controls (like the submit button) during the submit call to the server.
 
 Validation is done automatically whenever a field's value changes, or the field loses focus. Validation may be asynchronous, and
-`vue-async-form` will wait for it to complete. However, note that rapid data entry by the user may trigger this callback many times. If you
+`vue-smooth-form` will wait for it to complete. However, note that rapid data entry by the user may trigger this callback many times. If you
 want to be kind to your server, consider using a cancelable request using `AbortController`. An example of this is shown above.

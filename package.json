@@ -1,31 +1,33 @@
 {
-    "name": "vue-async-form",
+    "name": "vue-smooth-form",
     "version": "1.0.0",
     "author": "Chad Robinson <crobinson@medialantern.com",
     "private": false,
     "description": "Formik-inspired form handler for VueJS",
     "keywords": [
+        "smooth",
         "async",
         "validation",
         "vue",
         "forms"
     ],
     "license": "MIT",
-    "homepage": "https://github.com/crrobinson14/vue-async-form",
-    "bugs": "https://github.com/crrobinson14/vue-async-form/issues",
+    "homepage": "https://github.com/crrobinson14/vue-smooth-form",
+    "bugs": "https://github.com/crrobinson14/vue-smooth-form/issues",
     "repository": {
         "type": "git",
-        "url": "https://github.com/crrobinson14/vue-async-form.git"
+        "url": "https://github.com/crrobinson14/vue-smooth-form.git"
     },
     "scripts": {
         "serve": "vue-cli-service serve --open",
-        "build": "vue-cli-service build --target lib --name vueasyncform ./src/components/_globals.js",
-        "build-wc": "vue-cli-service build --target wc --name vue-asyncform 'src/components/*.vue'",
-        "build-wc-async": "vue-cli-service build --target wc-async --name vue-asyncform 'src/components/*.vue'",
+        "build": "vue-cli-service build --target lib --name vueSmoothForm ./src/components/_globals.js",
+        "build-wc": "vue-cli-service build --target wc --name vue-smoothForm 'src/components/*.vue'",
+        "build-wc-async": "vue-cli-service build --target wc-async --name vue-smoothForm 'src/components/*.vue'",
         "test": "vue-cli-service test",
         "e2e": "vue-cli-service e2e",
         "lint": "vue-cli-service lint",
-        "e2e:open": "vue-cli-service e2e:open"
+        "e2e:open": "vue-cli-service e2e:open",
+        "publish": "npm publish --access public"
     },
     "files": [
         "dist/*",
@@ -33,7 +35,7 @@
         "*.json",
         "*.js"
     ],
-    "main": "./dist/vueasyncform.common.js",
+    "main": "./dist/vueSmoothForm.common.js",
     "browserslist": [
         "> 1%",
         "last 2 versions",
