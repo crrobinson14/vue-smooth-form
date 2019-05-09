@@ -20,9 +20,9 @@
     },
     "scripts": {
         "serve": "vue-cli-service serve --open",
-        "build": "vue-cli-service build --target lib --name vueSmoothForm ./src/components/_globals.js",
-        "build-wc": "vue-cli-service build --target wc --name vue-smoothForm 'src/components/*.vue'",
-        "build-wc-async": "vue-cli-service build --target wc-async --name vue-smoothForm 'src/components/*.vue'",
+        "build": "vue-cli-service build --target lib --name vueSmoothForm ./src/components/VueSmoothForm.js",
+        "build-wc": "vue-cli-service build --target wc --name vue-smoothForm 'src/components/VueSmoothForm.vue'",
+        "build-wc-async": "vue-cli-service build --target wc-async --name vue-smoothForm 'src/components/VueSmoothForm.vue'",
         "test": "vue-cli-service test",
         "e2e": "vue-cli-service e2e",
         "lint": "vue-cli-service lint",
