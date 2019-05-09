@@ -94,8 +94,6 @@ export default {
       this.form.errors[field] = error;
       this.form.valid[field] = error === null;
       this.form.invalid[field] = error !== null;
-
-      this.setFieldTouched(field, true);
     },
 
     setFieldValue(field, value) {
