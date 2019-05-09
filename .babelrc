@@ -1,22 +1,5 @@
 {
     "presets": [
-        [
-            "env",
-            {
-                "modules": false
-            }
-        ]
-    ],
-    "plugins": [
-        "external-helpers",
-        "transform-runtime",
-        "transform-object-rest-spread"
-    ],
-    "env": {
-        "test": {
-            "presets": [
-                "power-assert"
-            ]
-        }
-    }
+        "@vue/app"
+    ]
 }

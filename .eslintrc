@@ -1,0 +1,11 @@
+{
+  "root": true,
+  "extends": [
+    "plugin:vue/essential",
+    "@vue/airbnb"
+  ],
+  "rules": {
+    "arrow-parens": "off",
+    "comma-dangle": "off"
+  }
+}

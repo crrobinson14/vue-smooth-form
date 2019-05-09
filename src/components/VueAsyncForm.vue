@@ -1,12 +1,12 @@
 <template>
-<form class="form">
+<form>
     <slot :form="form"></slot>
 </form>
 </template>
 
 <script>
-const fieldName = event => event instanceof Event ? event.target.name : event;
-const fieldValue = (event, value) => event instanceof Event ? event.target.value : value;
+const fieldName = event => (event instanceof Event ? event.target.name : event);
+const fieldValue = (event, value) => (event instanceof Event ? event.target.value : value);
 
 export default {
   props: ['initialValues', 'validateForm'],
@@ -14,6 +14,7 @@ export default {
     const fields = Object.keys(this.initialValues);
     const errors = {};
     const valid = {};
+    const invalid = {};
     const touched = {};
     const untouched = {};
     const dirty = {};
@@ -132,14 +133,5 @@ export default {
       }
     }
   }
-}
+};
 </script>
-
-<style lang="scss" scoped>
-.form {
-    padding: 20px;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-}
-</style>
