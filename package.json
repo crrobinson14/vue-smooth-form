@@ -27,7 +27,7 @@
         "e2e": "vue-cli-service e2e",
         "lint": "vue-cli-service lint",
         "e2e:open": "vue-cli-service e2e:open",
-        "publish": "npm publish --access public"
+        "pub": "npm version patch && npm publish --access public"
     },
     "files": [
         "dist/*",
