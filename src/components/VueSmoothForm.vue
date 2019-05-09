@@ -47,6 +47,7 @@ export default {
         isSubmitting: false,
         errors,
         valid,
+        invalid,
         touched,
         untouched,
         dirty,
