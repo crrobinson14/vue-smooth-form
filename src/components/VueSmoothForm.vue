@@ -20,7 +20,7 @@ const fieldValue = (event, value) => {
 };
 
 export default {
-  props: ['initialValues', 'validateForm'],
+  props: ['initialValues', 'validateForm', 'yupSchema'],
   data() {
     const fields = Object.keys(this.initialValues);
     const errors = {};
@@ -139,8 +139,27 @@ export default {
     // Internal
     async validate() {
       if (this.validateForm) {
-        await this.validateForm(this.form);
+        return this.validateForm(this.form);
       }
+
+      if (this.yupSchema) {
+        const errors = {};
+        Object.keys(this.form.values).forEach(key => {
+          errors[key] = null;
+        });
+
+        try {
+          await this.yupSchema.validate(this.form.values, { abortEarly: false });
+        } catch (e) {
+          e.inner.forEach(error => {
+            errors[error.path] = error.message;
+          });
+        }
+
+        this.setFormErrors(errors);
+      }
+
+      return true;
     }
   }
 };
