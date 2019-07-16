@@ -1,5 +1,5 @@
 <template>
-<form>
+<form class="vue-smooth-form">
     <slot :form="form"></slot>
 </form>
 </template>
@@ -82,6 +82,7 @@ export default {
 
       this.setFieldValue(field, value);
 
+      console.debug(`Field ${field} value changed to ${value}`, this);
       this.$emit('value', { field, value, form: this });
 
       await this.validate();
@@ -93,6 +94,7 @@ export default {
 
       this.setFieldValue(field, value);
 
+      console.debug(`Input ${field} value changed to ${value}`, this);
       this.$emit('value', { field, value, form: this });
 
       await this.validate();
