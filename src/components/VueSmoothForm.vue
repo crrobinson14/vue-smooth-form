@@ -9,7 +9,7 @@ const fieldName = event => (event instanceof Event ? event.target.name : event);
 
 const fieldValue = (event, value) => {
   if (event instanceof Event) {
-    if (event.target.checked !== undefined) {
+    if (event.target.type === 'checkbox' && event.target.checked !== undefined) {
       return event.target.checked;
     }
 
