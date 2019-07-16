@@ -156,3 +156,118 @@ convenience if you want to disable certain controls (like the submit button) dur
 Validation is done automatically whenever a field's value changes, or the field loses focus. Validation may be asynchronous, and
 `vue-smooth-form` will wait for it to complete. However, note that rapid data entry by the user may trigger this callback many times. If you
 want to be kind to your server, consider using a cancelable request using `AbortController`. An example of this is shown above.
+
+## Yup Schema
+
+To reduce boilerplate, you can use the excellent Yup library to define a schema. If you do, VueSmoothForm can handle all of the validation
+for you with no callbacks:
+
+```html
+<template>
+    <vue-smooth-form v-slot="{form}" :initial-values="initialValues" :yup-schema="validationSchema">
+        ...
+    </vue-smooth-form>
+</template>
+
+<script>
+import VueSmoothForm from 'vue-smooth-form';
+import * as yup from 'yup';
+
+export default {
+  components: { VueSmoothForm },
+  props: [],
+  data: function() {
+    return {
+      initialValues: {
+        name: '',
+        email: '',
+      },
+      validationSchema: yup.object().shape({
+        name: yup.string()
+          .min(3, 'Please enter between 3 and 20 characters')
+          .max(20, 'Please enter between 3 and 20 characters')
+          .required('This field is required'),
+        email: yup.string()
+          .email('Please enter a valid email address')
+          .required('This field is required'),
+      })
+    }
+  },
+}
+</script>
+```
+
+## Event Handling
+
+VueSmoothForm needs to know about events occurring in input fields to update its values and other internal state. But sometimes you may
+also want to know about these changes. A good example is if you need to clear one field when another is changed. In the form below, we
+show a contact method selector and room to enter an email address or phone number. If we select by-email, we disable the phone number
+field, and vice versa. But it could be confusing for the user to see a value still in the disabled field (which they cannot clear because
+of it being disabled). Using the change event we clear this for them: 
+
+```html
+<template>
+    <vue-smooth-form v-slot="{form}" :initial-values="initialValues" :yup-schema="validationSchema" @change="onChange">
+        <select
+            id="contactMethod"
+            name="contactMethod"
+            @blur="form.onBlur"
+            @change="form.onChange"
+            @input="form.onInput"
+            :value="form.values.contactMethod">
+            <option value="email">Email</option>
+            <option value="phone">Phone</option>
+          </select>
+
+        <input
+          id="email"
+          type="text"
+          @blur="form.onBlur"
+          @change="form.onChange"
+          @input="form.onInput"
+          name="email"
+          :value="form.values.email"
+          :disabled="form.values.contactMethod !== 'email"
+          :placeholder="Email Address">
+
+        <input
+          id="phone"
+          type="text"
+          @blur="form.onBlur"
+          @change="form.onChange"
+          @input="form.onInput"
+          name="phone"
+          :value="form.values.phone"
+          :disabled="form.values.contactMethod !== 'phone"
+          :placeholder="Phone Number">
+
+    </vue-smooth-form>
+</template>
+
+<script>
+import VueSmoothForm from 'vue-smooth-form';
+
+export default {
+  components: { VueSmoothForm },
+  props: [],
+  data: function() {
+    return {
+      initialValues: {
+        contactMethod: 'email',
+        email: '',
+        phone: '',
+      },
+    }
+  },
+  methods: {
+    onChange(({ field, value, form })) {
+      console.log(`Changed ${field} to ${value}`);
+      if (field === 'contactMethod') {
+        const unusedField = value === 'email' ? 'phone' : 'email';
+        form.setFieldValue(unusedField, '');
+      }
+    },
+  }
+}
+</script>
+```

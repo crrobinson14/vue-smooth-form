@@ -43,9 +43,9 @@ export default {
 
     return {
       form: {
-        onBlur: this.onBlur.bind(this),
-        onChange: this.onChange.bind(this),
-        onInput: this.onInput.bind(this),
+        onBlur: this.handleBlur.bind(this),
+        onChange: this.handleChange.bind(this),
+        onInput: this.handleInput.bind(this),
         setSubmitting: this.setSubmitting.bind(this),
         resetForm: this.resetForm.bind(this),
         setFieldValue: this.setFieldValue.bind(this),
@@ -70,20 +70,30 @@ export default {
     this.validate();
   },
   methods: {
-    onBlur(e) {
+    handleBlur(e) {
       const field = fieldName(e);
       this.setFieldTouched(field, true);
       this.setFieldDirty(field, true);
     },
 
-    async onChange(e, v) {
-      this.setFieldValue(fieldName(e), fieldValue(e, v));
+    async handleChange(e, v) {
+      const field = fieldName(e);
+      const value = fieldValue(e, v);
+
+      this.setFieldValue(field, value);
+
+      this.$emit('change', { field, value, form: this });
 
       await this.validate();
     },
 
-    async onInput(e, v) {
-      this.setFieldValue(fieldName(e), fieldValue(e, v));
+    async handleInput(e, v) {
+      const field = fieldName(e);
+      const value = fieldValue(e, v);
+
+      this.setFieldValue(field, value);
+
+      this.$emit('input', { field, value, form: this });
 
       await this.validate();
     },
