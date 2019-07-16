@@ -82,7 +82,7 @@ export default {
 
       this.setFieldValue(field, value);
 
-      this.$emit('change', { field, value, form: this });
+      this.$emit('value', { field, value, form: this });
 
       await this.validate();
     },
@@ -93,7 +93,7 @@ export default {
 
       this.setFieldValue(field, value);
 
-      this.$emit('input', { field, value, form: this });
+      this.$emit('value', { field, value, form: this });
 
       await this.validate();
     },

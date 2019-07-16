@@ -207,7 +207,7 @@ of it being disabled). Using the change event we clear this for them:
 
 ```html
 <template>
-    <vue-smooth-form v-slot="{form}" :initial-values="initialValues" :yup-schema="validationSchema" @change="onChange">
+    <vue-smooth-form v-slot="{form}" :initial-values="initialValues" :yup-schema="validationSchema" v-on:value="onValue">
         <select
             id="contactMethod"
             name="contactMethod"
@@ -260,7 +260,7 @@ export default {
     }
   },
   methods: {
-    onChange(({ field, value, form })) {
+    onValue({ field, value, form }) {
       console.log(`Changed ${field} to ${value}`);
       if (field === 'contactMethod') {
         const unusedField = value === 'email' ? 'phone' : 'email';
