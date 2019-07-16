@@ -1,6 +1,6 @@
 {
     "name": "vue-smooth-form",
-    "version": "1.0.13",
+    "version": "1.0.14",
     "author": "Chad Robinson <crobinson@medialantern.com>",
     "private": false,
     "description": "Formik-inspired form handler for VueJS",
