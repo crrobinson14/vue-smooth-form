@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import set from 'set-value';
+import set from 'object-set';
 
 const getPath = event => (event instanceof Event ? event.target.name : event);
 

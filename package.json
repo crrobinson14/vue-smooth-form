@@ -54,7 +54,7 @@
         "vue-template-compiler": "^2.5.13"
     },
     "dependencies": {
-        "set-value": "^3.0.1",
+        "object-set": "^1.0.1",
         "vue": "^2.6.10"
     }
 }
