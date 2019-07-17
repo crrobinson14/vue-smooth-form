@@ -141,10 +141,10 @@ Note that all three event handlers may be called with one of two patterns:
 
   `form.setSubmitting(true|false)` - Set the `isSubmitting` status for the form
   `form.resetForm()` - Reset all `values{}` back to `initialValues{}`.
-  `form.setFieldValue(field, value)` - Set `field` to `value`.
-  `form.setFieldError(field, error)` - Set the error status for a field. Set error to `null` to clear an error.
-  `form.setFieldTouched(field, true|false)` - Set the `touched` and `untouched` statuses for a field
-  `form.setFieldDirty(field, true|false)` - Set the `dirty` and `pristine` statuses for a field
+  `form.setFieldValue(path, value)` - Set `field` to `value`.
+  `form.setFieldError(path, error)` - Set the error status for a field. Set error to `null` to clear an error.
+  `form.setFieldTouched(path, true|false)` - Set the `touched` and `untouched` statuses for a field
+  `form.setFieldDirty(path, true|false)` - Set the `dirty` and `pristine` statuses for a field
   `form.setFormErrors(errors)` - Set all errors on a form. The parameter should be a dictionary of fields with error strings or `null`.
 
 ### Validation and Submission
@@ -260,9 +260,9 @@ export default {
     }
   },
   methods: {
-    onValue({ field, value, form }) {
-      console.log(`Changed ${field} to ${value}`);
-      if (field === 'contactMethod') {
+    onValue({ path, value, form }) {
+      console.log(`Changed ${path} to ${value}`);
+      if (path === 'contactMethod') {
         const unusedField = value === 'email' ? 'phone' : 'email';
         form.setFieldValue(unusedField, '');
       }

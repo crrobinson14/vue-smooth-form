@@ -5,9 +5,11 @@
 </template>
 
 <script>
-const fieldName = event => (event instanceof Event ? event.target.name : event);
+import set from 'set-value';
 
-const fieldValue = (event, value) => {
+const getPath = event => (event instanceof Event ? event.target.name : event);
+
+const getValue = (event, value) => {
   if (event instanceof Event) {
     if (event.target.type === 'checkbox' && event.target.checked !== undefined) {
       return event.target.checked;
@@ -19,10 +21,45 @@ const fieldValue = (event, value) => {
   return value;
 };
 
+// @see https://stackoverflow.com/questions/19098797/fastest-way-to-flatten-un-flatten-nested-json-objects
+const flatten = data => {
+  const result = {};
+
+  function recurse(cur, prop) {
+    if (Object(cur) !== cur) {
+      result[prop] = cur;
+    } else if (Array.isArray(cur)) {
+      let i;
+      let l;
+
+      for (i = 0, l = cur.length; i < l; i++) {
+        recurse(cur[i], prop + "[" + i + "]");
+      }
+
+      if (l === 0) {
+        result[prop] = [];
+      }
+    } else {
+      let isEmpty = true;
+      for (let p in cur) {
+        isEmpty = false;
+        recurse(cur[p], prop ? prop + "." + p : p);
+      }
+
+      if (isEmpty && prop) {
+        result[prop] = {};
+      }
+    }
+  }
+
+  recurse(data, "");
+  return result;
+};
+
 export default {
   props: ['initialValues', 'validateForm', 'yupSchema'],
   data() {
-    const fields = Object.keys(this.initialValues);
+    const paths = flatten(this.initialValues);
     const errors = {};
     const valid = {};
     const invalid = {};
@@ -31,14 +68,14 @@ export default {
     const dirty = {};
     const pristine = {};
 
-    fields.forEach(field => {
-      errors[field] = null;
-      valid[field] = true;
-      invalid[field] = false;
-      touched[field] = false;
-      untouched[field] = true;
-      dirty[field] = false;
-      pristine[field] = true;
+    Object.keys(paths).forEach(path => {
+      errors[path] = null;
+      valid[path] = true;
+      invalid[path] = false;
+      touched[path] = false;
+      untouched[path] = true;
+      dirty[path] = false;
+      pristine[path] = true;
     });
 
     return {
@@ -66,34 +103,34 @@ export default {
       }
     };
   },
+
   mounted() {
     this.validate();
   },
+
   methods: {
     handleBlur(e) {
-      const field = fieldName(e);
-      this.setFieldTouched(field, true);
-      this.setFieldDirty(field, true);
+      const path = getPath(e);
+      this.setFieldTouched(path, true);
+      this.setFieldDirty(path, true);
     },
 
     async handleChange(e, v) {
-      const field = fieldName(e);
-      const value = fieldValue(e, v);
+      const path = getPath(e);
+      const value = getValue(e, v);
 
-      this.setFieldValue(field, value);
-
-      this.$emit('value', { field, value, form: this });
+      this.setFieldValue(path, value);
+      this.$emit('value', { path, value, form: this });
 
       await this.validate();
     },
 
     async handleInput(e, v) {
-      const field = fieldName(e);
-      const value = fieldValue(e, v);
+      const path = getPath(e);
+      const value = getValue(e, v);
 
-      this.setFieldValue(field, value);
-
-      this.$emit('value', { field, value, form: this });
+      this.setFieldValue(path, value);
+      this.$emit('value', { path, value, form: this });
 
       await this.validate();
     },
@@ -103,44 +140,44 @@ export default {
     },
 
     resetForm() {
-      Object.keys(this.initialValues).forEach(field => {
-        this.form.values[field] = this.initialValues[field];
+      Object.assign(this.form.values, this.initialValues);
 
-        this.setFieldTouched(field, false);
-        this.setFieldDirty(field, false);
+      const paths = flatten(this.initialValues);
+      Object.keys(paths).forEach(path => {
+        this.setFieldTouched(path, false);
+        this.setFieldDirty(path, false);
       });
     },
 
-    setFieldError(field, error) {
-      this.form.errors[field] = error;
-      this.form.valid[field] = error === null;
-      this.form.invalid[field] = error !== null;
+    setFieldError(path, error) {
+      this.form.errors[path] = error;
+      this.form.valid[path] = error === null;
+      this.form.invalid[path] = error !== null;
     },
 
-    setFieldValue(field, value) {
-      this.form.values[field] = value;
-
-      this.setFieldTouched(field, true);
-      this.setFieldDirty(field, true);
+    setFieldValue(path, value) {
+      set(this.form.values, path, value);
+      this.setFieldTouched(path, true);
+      this.setFieldDirty(path, true);
     },
 
-    setFieldTouched(field, touched) {
-      this.form.touched[field] = touched;
-      this.form.untouched[field] = !touched;
+    setFieldTouched(path, touched) {
+      this.form.touched[path] = touched;
+      this.form.untouched[path] = !touched;
     },
 
-    setFieldDirty(field, dirty) {
-      this.form.dirty[field] = dirty;
-      this.form.pristine[field] = !dirty;
+    setFieldDirty(path, dirty) {
+      this.form.dirty[path] = dirty;
+      this.form.pristine[path] = !dirty;
     },
 
     setFormErrors(errors) {
       this.form.isValid = true;
 
-      Object.keys(errors).forEach(field => {
-        this.setFieldError(field, errors[field]);
+      Object.keys(errors).forEach(path => {
+        this.setFieldError(path, errors[path]);
 
-        if (this.form.invalid[field]) {
+        if (this.form.invalid[path]) {
           this.form.isValid = false;
         }
       });
@@ -154,7 +191,7 @@ export default {
 
       if (this.yupSchema) {
         const errors = {};
-        Object.keys(this.form.values).forEach(key => {
+        Object.keys(this.form.errors).forEach(key => {
           errors[key] = null;
         });
 
