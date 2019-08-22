@@ -120,7 +120,7 @@ export default {
       const value = getValue(e, v);
 
       this.setFieldValue(path, value);
-      this.$emit('value', { path, value, form: this });
+      this.$emit('value', { path, value, form: this.form });
 
       await this.validate();
     },
@@ -130,7 +130,7 @@ export default {
       const value = getValue(e, v);
 
       this.setFieldValue(path, value);
-      this.$emit('value', { path, value, form: this });
+      this.$emit('value', { path, value, form: this.form });
 
       await this.validate();
     },
