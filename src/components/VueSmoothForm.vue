@@ -32,8 +32,8 @@ const flatten = data => {
       let i;
       let l;
 
-      for (i = 0, l = cur.length; i < l; i++) {
-        recurse(cur[i], prop + "[" + i + "]");
+      for (i = 0, l = cur.length; i < l; i += 1) {
+        recurse(cur[i], prop + '[' + i + ']');
       }
 
       if (l === 0) {
@@ -41,9 +41,9 @@ const flatten = data => {
       }
     } else {
       let isEmpty = true;
-      for (let p in cur) {
+      for (const p in cur) {
         isEmpty = false;
-        recurse(cur[p], prop ? prop + "." + p : p);
+        recurse(cur[p], prop ? prop + '.' + p : p);
       }
 
       if (isEmpty && prop) {
@@ -52,7 +52,7 @@ const flatten = data => {
     }
   }
 
-  recurse(data, "");
+  recurse(data, '');
   return result;
 };
 
@@ -171,6 +171,20 @@ export default {
       this.form.pristine[path] = !dirty;
     },
 
+    setAllDirty(dirty) {
+      const paths = flatten(this.initialValues);
+      Object.keys(paths).forEach(path => {
+        this.setFieldDirty(path, dirty);
+      });
+    },
+
+    setAllTouched(touched) {
+      const paths = flatten(this.initialValues);
+      Object.keys(paths).forEach(path => {
+        this.setFieldTouched(path, touched);
+      });
+    },
+
     setFormErrors(errors) {
       this.form.isValid = true;
 
@@ -181,6 +195,10 @@ export default {
           this.form.isValid = false;
         }
       });
+    },
+
+    getForm() {
+      return this.form;
     },
 
     // Internal
