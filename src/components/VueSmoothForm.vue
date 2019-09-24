@@ -90,6 +90,8 @@ export default {
         setFieldTouched: this.setFieldTouched.bind(this),
         setFieldDirty: this.setFieldDirty.bind(this),
         setFormErrors: this.setFormErrors.bind(this),
+        setAllDirty: this.setAllDirty.bind(this),
+        setAllTouched: this.setAllTouched.bind(this),
         values: Object.assign({}, this.initialValues || {}),
         isValid: false,
         isSubmitting: false,
